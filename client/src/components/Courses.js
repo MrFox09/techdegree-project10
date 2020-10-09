@@ -26,12 +26,6 @@ function Courses () {
 
     }
 
- 
-
-
-
-
-
     return(
       
         <div className="bounds">
