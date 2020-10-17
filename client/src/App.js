@@ -6,6 +6,8 @@ import './index.css';
 import Courses from './components/Courses';
 import Header from './components/Header';
 import CourseDetail from './components/CourseDetail'; 
+import UserSignIn from './components/UserSignIn';
+import UserSignUp from './components/UserSignUp';
 
 
 
@@ -15,7 +17,8 @@ function App() {
     <div className="root">
       <div>
         <Header />
-        <CourseDetail />
+        <UserSignUp />
+        
       </div> 
     </div>
   );

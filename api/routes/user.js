@@ -46,55 +46,55 @@ const isEmpty = (obj) => {
 
     //Creates a user, sets the Location header to "/" and returns no content
 
-    router.post('/api/users', asyncHandler( async (req,res,next) => {
+  router.post('/api/users', asyncHandler( async (req,res,next) => {
 
      
 
      
-      try {
-        // check the body if it is empty, send a validation error when empty
+    try {
+      // check the body if it is empty, send a validation error when empty
 
-        if (isEmpty(req.body)) {
-          const err = new Error ();
-          err.status = 400;
-          res.status(400);
-          err.message = 'Validation Error, Can not be empty';
-          next(err);
-          
-        } else {
-
-           //hash the user password
-
-            req.body.password = bcryptjs.hashSync(req.body.password);
-
-           //create a new User in the User-DB
-            await User.create({
-
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            emailAddress: req.body.emailAddress,
-            password: req.body.password
-          
-          });
-  
-          res.location('/');
-          res.status(201).end();
-          
-        }        
-
-
-        // throw an error when enter invalid data
-      } catch (error) {
-        if(error.name === "SequelizeValidationError") {      
-          res.status(400).json(error);           
-        } else {
-          throw error;
-        }
+      if (isEmpty(req.body)) {
+        const err = new Error ();
+        err.status = 400;
+        res.status(400);
+        err.message = 'Validation Error, Can not be empty';
+        next(err);
         
-      } 
-  
+      } else {
+
+          //hash the user password
+
+          req.body.password = bcryptjs.hashSync(req.body.password);
+
+          //create a new User in the User-DB
+          await User.create({
+
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          emailAddress: req.body.emailAddress,
+          password: req.body.password
+        
+        });
+
+        res.location('/');
+        res.status(201).end();
+        
+      }        
+
+
+      // throw an error when enter invalid data
+    } catch (error) {
+      if(error.name === "SequelizeValidationError") {      
+        res.status(400).json(error);           
+      } else {
+        throw error;
+      }
       
-    }));
+    } 
+
+    
+  }));
 
 
   module.exports = router;
