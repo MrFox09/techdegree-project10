@@ -1,7 +1,12 @@
 import React, {useState} from 'react';
-import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
-function UserSignIn () {
+
+function UserSignIn (props) {
+
+    const history = useHistory();
+
+    const {authenticatedUser} =props;
 
     const [formInput, setFormInput] = useState({emailAddress: '', password:''});
 
@@ -11,19 +16,25 @@ function UserSignIn () {
      
     }; 
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
 
-        const authorizationToken = btoa(`${formInput.emailAddress}:${formInput.password}`);
-
-        axios({
-            method:'get',
-            url:'http://localhost:5000/api/users', 
-            headers: {'Content-Type':'application/json', 'Authorization': `Basic ${authorizationToken}`},  
+        const user = await props.signIn(formInput.emailAddress,formInput.password);       
             
-                      
-        })
-        .then(res=> console.log(res))
+        if(user === null) {
+            console.log('error');
+        }else{
+            
+            console.log(`User: ${formInput.emailAddress} logged in`)
+            
+        }
+      
+
+    };
+
+    const handleCancel = (e) =>{
+        e.preventDefault();
+        history.push('/');
 
 
     };
@@ -39,11 +50,11 @@ function UserSignIn () {
                 <form onSubmit = {handleSubmit}>
                 <div><input id="emailAddress" name="emailAddress" type="text" className='' placeholder="Email Address" onChange = {handleChange}  /></div>
                 <div><input id="password" name="password" type="password" className='' placeholder="Password" onChange = {handleChange} /></div>
-                <div className="grid-100 pad-bottom"><button className="button" type="submit">Sign In</button><button className="button button-secondary"  >Cancel</button></div>
+                <div className="grid-100 pad-bottom"><button className="button" type="submit">Sign In</button><button className="button button-secondary" onClick={ handleCancel}  >Cancel</button></div>
                 </form>
             </div>
             <p>&nbsp;</p>
-            <p>Don't have a user account? <a href="sign-up.html">Click here</a> to sign up!</p>
+            <p>Don't have a user account? <a href="/signup">Click here</a> to sign up!</p>
             </div>
         </div>
       

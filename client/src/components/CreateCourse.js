@@ -8,7 +8,7 @@ function CreateCourse () {
     // set the formInput when changed
     const handleChange = (event) =>{
       setFormInput({...formInput, [event.target.name]: event.target.value} );
-      console.log(formInput);
+      
       
     }; 
 
@@ -19,9 +19,11 @@ function CreateCourse () {
         axios({
           method: 'post',
           url: 'http://localhost:5000/api/courses',      
-          headers: {'Content-Type':'application/json'},
+          headers: {'Content-Type':'application/json'},//authorization header is missing
           data: formInput
         })
+
+        
     
         
       };
@@ -50,7 +52,7 @@ function CreateCourse () {
                     <p>By Joe Smith</p>
                 </div>
                 <div className="course--description">
-                    <div><textarea id="description" name="description" className placeholder="Course description..." defaultValue={""} onChange = {handleChange} /></div>
+                    <div><textarea id="description" name="description"  placeholder="Course description..." defaultValue={""} onChange = {handleChange} /></div>
                 </div>
                 </div>
                 <div className="grid-25 grid-right">
@@ -62,12 +64,12 @@ function CreateCourse () {
                     </li>
                     <li className="course--stats--list--item">
                         <h4>Materials Needed</h4>
-                        <div><textarea id="materialsNeeded" name="materialsNeeded" className placeholder="List materials..." defaultValue={""}  onChange = {handleChange}/></div>
+                        <div><textarea id="materialsNeeded" name="materialsNeeded" placeholder="List materials..." defaultValue={""}  onChange = {handleChange}/></div>
                     </li>
                     </ul>
                 </div>
                 </div>
-                <div className="grid-100 pad-bottom"><button className="button" type="submit">Create Course</button><button className="button button-secondary" onclick="event.preventDefault(); location.href='index.html';">Cancel</button></div>
+                <div className="grid-100 pad-bottom"><button className="button" type="submit">Create Course</button><button className="button button-secondary" >Cancel</button></div>
             </form>
             </div>
         </div>

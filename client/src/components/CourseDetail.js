@@ -2,13 +2,17 @@ import React, {useState,useEffect} from 'react';
 import axios from 'axios';
 
 
-function CourseDetail () {
+function CourseDetail ({match},props) {
 
+    // const {authenticated,authenticatedUser} = props;
+   
 
     const [courseDetails, setCourseDetails] = useState([]);
 
+    
 
-    let id = 1; //match.params.id;
+
+    let id = match.params.id;
    
 
     useEffect(()=>{
@@ -35,11 +39,24 @@ function CourseDetail () {
 
 
     return(
+
+      
         <div>
         <div className="actions--bar">
           <div className="bounds">
-            <div className="grid-100"><span><a className="button" href={`/courses/${id}/update`}>Update Course</a><a className="button" href="#" onClick={handleDelete}>Delete Course</a></span><a
-                className="button button-secondary" href="/">Return to List</a></div>
+            <div className="grid-100">
+            {/** when userId and course id match and the user is logged in the delete and the update button will render */}
+            {
+              (props.authenticatedUser.id === ownerData.id && props.authenticated)
+
+            }
+              <span>
+                <a className="button" href={`/courses/${id}/update`}>Update Course</a>
+                <a className="button" href="#" onClick={handleDelete}>Delete Course</a>
+              </span>
+
+              <a className="button button-secondary" href="/">Return to List</a>
+            </div>
           </div>
         </div>
         <div className="bounds course--detail">
