@@ -117,7 +117,7 @@ function App() {
 
           <Switch>
             <Route exact path= "/" component={Courses} />
-            <PrivateRoute  path= "/courses/create" component={CreateCourse} />
+            <PrivateRoute  path= "/courses/create" component={CreateCourse} authToken={authToken} />
             <PrivateRoute  path= "/courses/:id/update" component={UpdateCourse} authToken={authToken}  />
             <Route  path= "/courses/:id" render={(routerProps)=> <CourseDetail {...routerProps} authenticated={authenticated} authenticatedUser={authenticatedUser}  />} />
             <Route  path= "/signin" render={()=> <UserSignIn  signIn= {signIn} /> }/>

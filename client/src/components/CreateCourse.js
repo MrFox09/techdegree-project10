@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import axios from 'axios';
 
-function CreateCourse () {
+
+function CreateCourse (props) {
 
     const history = useHistory();
 
     const [formInput, setFormInput] = useState({});
+    const [errors, setErrors] = useState([]);
 
     // set the formInput when changed
     const handleChange = (event) =>{
@@ -15,21 +16,64 @@ function CreateCourse () {
       
     }; 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
     
         // Send a POST request
-        axios({
-          method: 'post',
-          url: 'http://localhost:5000/api/courses',      
-          headers: {'Content-Type':'application/json'},//authorization header is missing
-          data: formInput
-        })
-
-        
+        const response = await fetch('http://localhost:5000/api/courses',
+            {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8', 
+                'Authorization': `Basic ${props.authToken}`     
+            },
+            body: JSON.stringify(formInput)
     
+            }    
+        );
+    
+        if(response.status === 201) {
         
-      };
+            history.push('/');
+    
+        }
+    
+        else if(response.status === 400) {
+            response.json()
+            .then(data => {
+                if(data.message){
+                setErrors([data.message])            
+                }else{
+                let validationErrors = data.errors;
+                validationErrors = validationErrors.map(x => x.message);
+                setErrors(validationErrors);
+                }
+    
+            })
+            .catch(err=> {
+                console.log(err);
+            } );
+        }             
+    };
+
+      // if there are errors returns the error component
+      function ErrorsDisplay({ errors }) {
+        let errorsDisplay = null;
+
+        if (errors.length) {
+        errorsDisplay = (
+            <div>
+            <h2 className="validation--errors--label">Validation errors</h2>
+            <div className="validation-errors">
+                <ul>
+                {errors.map((error, i) => <li key={i}>{error}</li>)}
+                </ul>
+            </div>
+            </div>
+        );
+        }
+        return errorsDisplay;
+    };
 
     // handle the redirect when the cancel button is clicked
     const redirect = () =>{ history.push('/')};
@@ -41,15 +85,7 @@ function CreateCourse () {
         <div className="bounds course--detail">
             <h1>Create Course</h1>
             <div>
-            <div>
-                <h2 className="validation--errors--label">Validation errors</h2>
-                <div className="validation-errors">
-                <ul>
-                    <li>Please provide a value for "Title"</li>
-                    <li>Please provide a value for "Description"</li>
-                </ul>
-                </div>
-            </div>
+            <ErrorsDisplay errors={errors} />
             <form onSubmit = {handleSubmit}>
                 <div className="grid-66">
                 <div className="course--header">

@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown'
 
 
 function CourseDetail ({match,...props}) {
@@ -70,7 +71,7 @@ function CourseDetail ({match,...props}) {
               <p>{`by ${ownerData.firstName} ${ownerData.lastName}`}</p>
             </div>
             <div className="course--description">
-              <p>{courseDetails.description}</p>
+              <p><ReactMarkdown>{courseDetails.description}</ReactMarkdown></p>
 
             </div>
           </div>
@@ -83,9 +84,9 @@ function CourseDetail ({match,...props}) {
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
-                  <ul>
-                   <li>{courseDetails.materialsNeeded}</li>                    
-                  </ul>
+                  
+                   <ReactMarkdown>{courseDetails.materialsNeeded}</ReactMarkdown>                   
+                
                 </li>
               </ul>
             </div>
