@@ -6,7 +6,7 @@ function UserSignIn (props) {
 
     const history = useHistory();
 
-    const {authenticatedUser} =props;
+   
 
     const [formInput, setFormInput] = useState({emailAddress: '', password:''});
 

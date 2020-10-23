@@ -64,8 +64,11 @@ const isEmpty = (obj) => {
       } else {
 
           //hash the user password
-
-          req.body.password = bcryptjs.hashSync(req.body.password);
+          if(req.body.password === "") {
+            req.body.password = null;
+          }else {
+            req.body.password = bcryptjs.hashSync(req.body.password);
+          }
 
           //create a new User in the User-DB
           await User.create({

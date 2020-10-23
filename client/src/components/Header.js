@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Header ({...props}) {
 
-  let {authenticated,authenticatedUser} = props;
+  const {authenticated,authenticatedUser} = props;
 
 
   

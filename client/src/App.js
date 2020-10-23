@@ -31,6 +31,7 @@ function App() {
 
   const [authenticatedUser, setAuthenticatedUser] = useState({});
   const [authenticated, setAuthenticated] = useState(false);
+  const [authToken, setAuthToken] = useState('');
   
 
   // signIn signs in a user 
@@ -52,6 +53,7 @@ function App() {
       }    
     );
      if (response.status === 200){
+       setAuthToken(authorizationToken);
 
       response.json()
         .then(data => {
@@ -65,6 +67,7 @@ function App() {
      else if( response.status === 401){
       setAuthenticated(false);
       setAuthenticatedUser({});
+      setAuthToken('');
        return null;
      }
      else {
@@ -78,6 +81,7 @@ function App() {
   const signOut = () =>{
     setAuthenticatedUser({});
     setAuthenticated(false);
+    setAuthToken('');
 
   };
 
@@ -114,10 +118,10 @@ function App() {
           <Switch>
             <Route exact path= "/" component={Courses} />
             <PrivateRoute  path= "/courses/create" component={CreateCourse} />
-            <PrivateRoute  path= "/courses/:id/update" component={UpdateCourse} />
+            <PrivateRoute  path= "/courses/:id/update" component={UpdateCourse} authToken={authToken}  />
             <Route  path= "/courses/:id" render={(routerProps)=> <CourseDetail {...routerProps} authenticated={authenticated} authenticatedUser={authenticatedUser}  />} />
             <Route  path= "/signin" render={()=> <UserSignIn  signIn= {signIn} /> }/>
-            <Route  path= "/signup" component={UserSignUp} />
+            <Route  path= "/signup" render={()=> <UserSignUp  signIn= {signIn}  /> }/>
             <Route  path= "/signout" render={()=> <UserSignOut signOut= {signOut} /> }/>
 
 

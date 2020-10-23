@@ -4,18 +4,20 @@ import axios from 'axios';
 
 
 
-function UpdateCourse ({match}) {
+function UpdateCourse ({match,...props}) {
 
     const history = useHistory();
 
     const [courseDetails, setCourseDetails] = useState([]);
     const [formInput, setFormInput] = useState({});
+    const [errors, setErrors] = useState([]);
 
 
     let id = match.params.id;
    
 
     useEffect(()=>{
+        
       axios.get(`http://localhost:5000/api/courses/${id}`)
       .then( response => setCourseDetails(response.data))
       .catch(error => {
@@ -26,19 +28,43 @@ function UpdateCourse ({match}) {
     // store the owner data in a variable, to have access to the owner object
     const ownerData = {...courseDetails.owner};   
 
-    const handleSubmit = (e) =>{
-        e.preventDefault();
+    const handleSubmit = async (e) =>{
+        e.preventDefault();      
 
+        const response = await fetch(`http://localhost:5000/api/courses/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8', 
+            'Authorization': `Basic ${props.authToken}`     
+          },
+          body: JSON.stringify(formInput)
+  
+        }    
+      );
+  
+      if(response.status === 201) {
       
-
-        axios({
-            method:'post',
-            url:`http://localhost:5000/api/courses/${id}`, 
-            headers: {'Content-Type':'application/json', },  //authorization header is missing
-            data: formInput
-                      
-        })
-        .then(res=> console.log(res))
+        history.push(`/courses/${id}`);
+  
+      }
+  
+      else if(response.status === 400) {
+        response.json()
+          .then(data => {
+            if(data.message){
+              setErrors([data.message])            
+            }else{
+              let validationErrors = data.errors;
+              validationErrors = validationErrors.map(x => x.message);
+              setErrors(validationErrors);
+            }
+  
+          })
+          .catch(err=> {
+            console.log(err);
+          } );
+      }     
 
 
     };
@@ -49,6 +75,26 @@ function UpdateCourse ({match}) {
 
     }; 
 
+
+    // if there are errors returns the error component
+    function ErrorsDisplay({ errors }) {
+        let errorsDisplay = null;
+
+        if (errors.length) {
+        errorsDisplay = (
+            <div>
+            <h2 className="validation--errors--label">Validation errors</h2>
+            <div className="validation-errors">
+                <ul>
+                {errors.map((error, i) => <li key={i}>{error}</li>)}
+                </ul>
+            </div>
+            </div>
+        );
+        }
+        return errorsDisplay;
+    };
+
     // handle the redirect when the cancel button is clicked
     const redirect = () =>{ history.push(`/courses/${id}`)};
 
@@ -57,6 +103,7 @@ function UpdateCourse ({match}) {
         <div className="bounds course--detail">
         <h1>Update Course</h1>
         <div>
+        <ErrorsDisplay errors={errors} />
           <form onSubmit={handleSubmit}>
             <div className="grid-66">
               <div className="course--header">
