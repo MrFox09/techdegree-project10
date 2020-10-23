@@ -62,6 +62,7 @@ function UpdateCourse ({match,...props}) {
   
           })
           .catch(err=> {
+            
             console.log(err);
           } );
       }     

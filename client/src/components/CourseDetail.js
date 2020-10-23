@@ -1,10 +1,12 @@
 import React, {useState,useEffect} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link,useHistory } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown'
 
 
 function CourseDetail ({match,...props}) {
+
+    const history = useHistory();
 
     const {authenticated,authenticatedUser} = props;
    
@@ -21,6 +23,7 @@ function CourseDetail ({match,...props}) {
       axios.get(`http://localhost:5000/api/courses/${id}`)
       .then( response => setCourseDetails(response.data))
       .catch(error => {
+          history.push('/notfound');
           console.log('Error with data fetching' , error);
       });
     },[id]);

@@ -26,7 +26,7 @@ function UserSignIn (props) {
         }else{
             
             console.log(`User: ${formInput.emailAddress} logged in`)
-            history.push('/');
+            history.goBack();
             
         }
       
