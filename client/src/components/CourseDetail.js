@@ -1,10 +1,11 @@
 import React, {useState,useEffect} from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
-function CourseDetail ({match},props) {
+function CourseDetail ({match,...props}) {
 
-    // const {authenticated,authenticatedUser} = props;
+    const {authenticated,authenticatedUser} = props;
    
 
     const [courseDetails, setCourseDetails] = useState([]);
@@ -47,15 +48,17 @@ function CourseDetail ({match},props) {
             <div className="grid-100">
             {/** when userId and course id match and the user is logged in the delete and the update button will render */}
             {
-              (props.authenticatedUser.id === ownerData.id && props.authenticated)
+               authenticatedUser.id === ownerData.id && authenticated ?
+               <span>
+                <Link className="button" to={`/courses/${id}/update`}>Update Course</Link>
+                <Link className="button" href="#" onClick={handleDelete}>Delete Course</Link>
+              </span>
+              :null
 
             }
-              <span>
-                <a className="button" href={`/courses/${id}/update`}>Update Course</a>
-                <a className="button" href="#" onClick={handleDelete}>Delete Course</a>
-              </span>
+              
 
-              <a className="button button-secondary" href="/">Return to List</a>
+              <Link className="button button-secondary" to="/">Return to List</Link>
             </div>
           </div>
         </div>

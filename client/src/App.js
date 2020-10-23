@@ -7,6 +7,7 @@ import {
   Redirect,
   
   
+  
 } from 'react-router-dom';
 
 
@@ -24,10 +25,12 @@ import UserSignOut from './components/UserSignOut';
 
 
 function App() {
+
+  
   
 
   const [authenticatedUser, setAuthenticatedUser] = useState({});
-  const [authenticated, setAuthenticated] = useState({isAuthenticated:false});
+  const [authenticated, setAuthenticated] = useState(false);
   
 
   // signIn signs in a user 
@@ -52,18 +55,16 @@ function App() {
 
       response.json()
         .then(data => {
-          setAuthenticatedUser(data)
+          setAuthenticatedUser(data,data.password=password)
         });
 
       
-       setAuthenticated(authenticated.isAuthenticated =true);
-       
-       
-              
+       setAuthenticated(true);      
 
      }
      else if( response.status === 401){
-      setAuthenticated(authenticated.isAuthenticated =false);
+      setAuthenticated(false);
+      setAuthenticatedUser({});
        return null;
      }
      else {
@@ -76,7 +77,7 @@ function App() {
 
   const signOut = () =>{
     setAuthenticatedUser({});
-    setAuthenticated(authenticated.isAuthenticated =false);
+    setAuthenticated(false);
 
   };
 
@@ -87,7 +88,7 @@ function App() {
       <Route
         {...rest}
         render={({location}) =>
-          authenticated.isAuthenticated ? (
+          authenticated ? (
             children
           ) : (
             <Redirect
@@ -108,7 +109,7 @@ function App() {
 
       <div className="root">
         <div>
-          <Header />
+          <Header authenticated={authenticated} authenticatedUser={authenticatedUser}  />
 
           <Switch>
             <Route exact path= "/" component={Courses} />

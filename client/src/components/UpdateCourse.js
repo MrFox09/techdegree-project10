@@ -1,15 +1,18 @@
 import React, {useState,useEffect} from 'react';
+import {useHistory} from 'react-router-dom';
 import axios from 'axios';
 
 
 
-function UpdateCourse () {
+function UpdateCourse ({match}) {
+
+    const history = useHistory();
 
     const [courseDetails, setCourseDetails] = useState([]);
     const [formInput, setFormInput] = useState({});
 
 
-    let id = 1; //match.params.id;
+    let id = match.params.id;
    
 
     useEffect(()=>{
@@ -46,6 +49,9 @@ function UpdateCourse () {
 
     }; 
 
+    // handle the redirect when the cancel button is clicked
+    const redirect = () =>{ history.push(`/courses/${id}`)};
+
 
     return(
         <div className="bounds course--detail">
@@ -76,7 +82,7 @@ function UpdateCourse () {
                 </ul>
               </div>
             </div>
-            <div className="grid-100 pad-bottom"><button className="button" type="submit">Update Course</button><button className="button button-secondary" >Cancel</button></div>
+            <div className="grid-100 pad-bottom"><button className="button" type="submit">Update Course</button><button className="button button-secondary" onClick={redirect} >Cancel</button></div>
           </form>
         </div>
       </div>

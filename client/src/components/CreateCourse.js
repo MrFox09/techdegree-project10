@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import axios from 'axios';
 
 function CreateCourse () {
+
+    const history = useHistory();
 
     const [formInput, setFormInput] = useState({});
 
@@ -27,6 +30,9 @@ function CreateCourse () {
     
         
       };
+
+    // handle the redirect when the cancel button is clicked
+    const redirect = () =>{ history.push('/')};
     
     
     return(
@@ -69,7 +75,7 @@ function CreateCourse () {
                     </ul>
                 </div>
                 </div>
-                <div className="grid-100 pad-bottom"><button className="button" type="submit">Create Course</button><button className="button button-secondary" >Cancel</button></div>
+                <div className="grid-100 pad-bottom"><button className="button" type="submit">Create Course</button><button className="button button-secondary" onClick = {redirect} >Cancel</button></div>
             </form>
             </div>
         </div>
