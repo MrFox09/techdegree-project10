@@ -5,10 +5,10 @@ import {
   Route,
   Switch,
   Redirect,
-  
-  
-  
+  useHistory  
 } from 'react-router-dom';
+
+import Cookies from 'js-cookie';
 
 
 //Import Components
@@ -27,17 +27,20 @@ import UnhandledError from './components/UnhandledError';
 
 
 
+
 function App() { 
   
-
-  const [authenticatedUser, setAuthenticatedUser] = useState({});
+  const history = useHistory();
+  const [authenticatedUser, setAuthenticatedUser] = useState(Cookies.getJSON('authenticatedUser') || {});
   const [authenticated, setAuthenticated] = useState(false);
-  const [authToken, setAuthToken] = useState('');
+  const [authToken, setAuthToken] = useState(''); 
 
-  useEffect(()=>{},[]);
+    //calls the signIn function to sign the user when a cookie is available
 
-
-
+    useEffect(()=>{
+     signIn(authenticatedUser.emailAddress, authenticatedUser.password);       
+      
+    },[])
   
 
   // signIn signs in a user 
@@ -59,15 +62,21 @@ function App() {
       }    
     );
      if (response.status === 200){
-       setAuthToken(authorizationToken);
+       
 
       response.json()
-        .then(data => {
-          setAuthenticatedUser(data,data.password=password)
-        });
+        .then(data => {         
 
+          setAuthenticatedUser(data,data.password=password);
+          // set Cookie
+          Cookies.set('authenticatedUser' , JSON.stringify(data),{expires:1});
+
+
+        });
       
-       setAuthenticated(true);      
+       setAuthenticated(true);
+       setAuthToken(authorizationToken); 
+
 
      }
      else if( response.status === 401){
@@ -77,24 +86,25 @@ function App() {
        return null;
      }
      else {
-       throw new Error();
+       history.push('/error');
      }     
 
   };
 
-  //signOut function which signsOut the user and redirect to "/"
+  // signs out the user and set the states to default values, removes cookies
 
   const signOut = () =>{
     setAuthenticatedUser({});
     setAuthenticated(false);
     setAuthToken('');
+    Cookies.remove('authenticatedUser');
 
   };
 
 
 
   
-
+ // HOC to protect routes
   const PrivateRoute = ({component: Component,  ...rest}) => {
     return (
 

@@ -17,26 +17,48 @@ module.exports = (sequelize) => {
         title:{
             type:Sequelize.STRING,
             allowNull:false,
-            validate: {notEmpty:true}
+            validate:  {
+                notEmpty:{
+                    msg: 'Title can not be empty'
+                },
+                notNull: {
+                    msg: 'Title can not be empty'
+                }
+            }
         },
 
         description:{
             type:Sequelize.TEXT,
             allowNull:false,
-            validate: {notEmpty:true}
+            validate:  {
+                notEmpty:{
+                    msg: 'Description can not be empty'
+                },
+                notNull: {
+                    msg: 'Description can not be empty'
+                }
+            }
         },
 
         estimatedTime:{
             type:Sequelize.STRING,
             allowNull:true,
-            validate: {notEmpty:true}
+            validate:  {
+                notEmpty:{
+                    msg: ' Estimated Time can not be empty'
+                },
+            }
             
         },
 
         materialsNeeded:{
             type:Sequelize.STRING,
             allowNull:true,
-            validate: {notEmpty:true}
+            validate:  {
+                notEmpty:{
+                    msg: 'Password can not be empty'
+                },
+            }
         },
 
 

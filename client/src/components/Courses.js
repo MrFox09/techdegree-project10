@@ -1,26 +1,35 @@
 import React, {useState,useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Course from './Course';
 
-//Fetch all courses data from the api and render the courses  
+
 
 function Courses () {
-
+    const history = useHistory();
     const [courses, setCourses] = useState([]); 
 
+    //Fetch all courses data from the api and render the courses  
     useEffect(()=>{
 
         axios.get('http://localhost:5000/api/courses')
             .then( response => setCourses(response.data))
             .catch(error => {
-                console.log('Error with data fetching' , error);
+                if(error.response.status === 404){
+                    history.push('/notfound');
+                    console.log('Error with data fetching' , error);
+                    
+                  }else{
+                    history.push('/error');
+        
+                  }
             });
             
     },[]);
 
     let course;
 
+    // creates the course components and store the data in course
     if(courses.length > 0) {
 
         course = courses.map(courses => <Course key={courses.id} title={courses.title} description={courses.description} id={courses.id} /> )

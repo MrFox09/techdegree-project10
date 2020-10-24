@@ -16,6 +16,7 @@ function CreateCourse (props) {
       
     }; 
 
+    // calls the api to create a new course
     const handleSubmit = async (e) => {
         e.preventDefault();
     
@@ -52,11 +53,12 @@ function CreateCourse (props) {
             })
             .catch(err=> {
                 console.log(err);
+                history.push('/error');
             } );
         }             
     };
 
-      // if there are errors returns the error component
+      // if there are errors returns the error component, and provides error messages
       function ErrorsDisplay({ errors }) {
         let errorsDisplay = null;
 
@@ -75,7 +77,7 @@ function CreateCourse (props) {
         return errorsDisplay;
     };
 
-    // handle the redirect when the cancel button is clicked
+    // handle the redirect when the cancel button is clicked, to root route
     const redirect = () =>{ history.push('/')};
     
     

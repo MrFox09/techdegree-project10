@@ -24,7 +24,7 @@ function UserSignUp (props) {
 
 
 
-
+  // calls the api to create a new user
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -60,6 +60,7 @@ function UserSignUp (props) {
 
         })
         .catch(err=> {
+          history.push('/error');
           console.log(err);
         } );
     }     

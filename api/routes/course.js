@@ -16,7 +16,7 @@ function asyncHandler(cb){
     };
   }
 
-  // Helper Function which will check if an object is empty returns true if it is or false if not
+ // Helper Function which will check if an object is empty returns true if it is or false if not
 
 const isEmpty = (obj) => {
   for(var key in obj) {
@@ -50,6 +50,8 @@ router.get('/api/courses', asyncHandler( async (req,res,next) => {
     
   } else {
     const err = new Error ();
+    err.message = "Course not found";
+    err.status =404;
     next(err);
     
   }
@@ -80,9 +82,10 @@ router.get('/api/courses/:id', asyncHandler( async (req,res,next) => {
     res.json(course);
     
   } else {
-    console.log('error');
+    
     const err = new Error ();
     err.message = "Course not found";
+    err.status =404;
     next(err);
     
   }    

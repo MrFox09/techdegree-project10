@@ -17,19 +17,29 @@ function UpdateCourse ({match,...props}) {
 
     let id = match.params.id;
    
-
+    // make a api call to get the course data
     useEffect(()=>{
         
       axios.get(`http://localhost:5000/api/courses/${id}`)
       .then( response => setCourseDetails(response.data))
       .catch(error => {
+        if(error.response.status === 404){
+          history.push('/notfound');
+          
+          
+        }else{
+          history.push('/error');
           console.log('Error with data fetching' , error);
+
+        }
       });
     },[id]);
 
     // store the owner data in a variable, to have access to the owner object
     const ownerData = {...courseDetails.owner};   
 
+
+    // on submit, updates the course 
     const handleSubmit = async (e) =>{
         e.preventDefault();      
 

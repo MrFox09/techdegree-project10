@@ -4,9 +4,7 @@ import {useHistory} from 'react-router-dom';
 
 function UserSignIn (props) {
 
-    const history = useHistory();
-
-   
+    const history = useHistory();   
 
     const [formInput, setFormInput] = useState({emailAddress: '', password:''});
 
@@ -16,13 +14,14 @@ function UserSignIn (props) {
      
     }; 
 
+    // on submit calls the sign in function in App.js and sign in the user
     const handleSubmit = async (e) =>{
         e.preventDefault();
 
         const user = await props.signIn(formInput.emailAddress,formInput.password);       
             
-        if(user === null) {
-            console.log('error');
+        if(user === null) {            
+            history.push('/forbidden');
         }else{
             
             console.log(`User: ${formInput.emailAddress} logged in`)
@@ -33,11 +32,11 @@ function UserSignIn (props) {
 
     };
 
+    // on cancel click redirects to root route
+
     const handleCancel = (e) =>{
         e.preventDefault();
         history.push('/');
-
-
     };
 
 

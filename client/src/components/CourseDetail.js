@@ -8,28 +8,35 @@ function CourseDetail ({match,...props}) {
 
     const history = useHistory();
 
-    const {authenticated,authenticatedUser,authToken} = props;
-   
+    const {authenticated,authenticatedUser,authToken} = props;   
 
     const [courseDetails, setCourseDetails] = useState([]);
 
-    
-
-
     let id = match.params.id;
    
-
+    // get the course depending on the course id, everytime the id gets changed
     useEffect(()=>{
       axios.get(`http://localhost:5000/api/courses/${id}`)
       .then( response => setCourseDetails(response.data))
       .catch(error => {
-          history.push('/notfound');
-          console.log('Error with data fetching' , error);
+
+          if(error.response.status === 404){
+            history.push('/notfound');
+            
+            
+          }else{
+            history.push('/error');
+            console.log('Error with data fetching' , error);
+
+          }
+
       });
     },[id]);
 
     // store the owner data in a variable, to have access to the owner object
     const ownerData = {...courseDetails.owner};   
+
+    // make a call to the api and delete the course
 
     const handleDelete = async () => {
 
@@ -53,12 +60,10 @@ function CourseDetail ({match,...props}) {
 
      }
      else {
-       throw new Error();
+      history.push('/error');
      }
 
-    };
-
-   
+    };   
 
 
     return(
