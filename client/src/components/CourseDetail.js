@@ -8,7 +8,7 @@ function CourseDetail ({match,...props}) {
 
     const history = useHistory();
 
-    const {authenticated,authenticatedUser} = props;
+    const {authenticated,authenticatedUser,authToken} = props;
    
 
     const [courseDetails, setCourseDetails] = useState([]);
@@ -31,12 +31,30 @@ function CourseDetail ({match,...props}) {
     // store the owner data in a variable, to have access to the owner object
     const ownerData = {...courseDetails.owner};   
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
 
-      axios.delete(`http://localhost:5000/api/courses/${id}`, {
-        data: {       
+      const response = await fetch(`http://localhost:5000/api/courses/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': `Basic ${authToken}`
         }
-      });
+
+      }    
+    );
+     if (response.status === 204){
+
+      history.push('/');     
+
+     }
+     else if( response.status === 401){
+       history.push('/forbidden');
+
+     }
+     else {
+       throw new Error();
+     }
 
     };
 
@@ -74,7 +92,7 @@ function CourseDetail ({match,...props}) {
               <p>{`by ${ownerData.firstName} ${ownerData.lastName}`}</p>
             </div>
             <div className="course--description">
-              <p><ReactMarkdown>{courseDetails.description}</ReactMarkdown></p>
+              <ReactMarkdown>{courseDetails.description}</ReactMarkdown>
 
             </div>
           </div>

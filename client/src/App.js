@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import './index.css';
 import {
   BrowserRouter ,
@@ -27,14 +27,17 @@ import UnhandledError from './components/UnhandledError';
 
 
 
-function App() {
-
-  
+function App() { 
   
 
   const [authenticatedUser, setAuthenticatedUser] = useState({});
   const [authenticated, setAuthenticated] = useState(false);
   const [authToken, setAuthToken] = useState('');
+
+  useEffect(()=>{},[]);
+
+
+
   
 
   // signIn signs in a user 
@@ -90,25 +93,20 @@ function App() {
 
 
 
-  function PrivateRoute({ children, ...rest }) {
+  
+
+  const PrivateRoute = ({component: Component,  ...rest}) => {
     return (
-      <Route
-        {...rest}
-        render={({location}) =>
-          authenticated ? (
-            children
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/signin",
-                state: { from: location }
-              }}
-            />
-          )
-        }
-      />
+
+        // Show the component only when the user is logged in
+        // Otherwise, redirect the user to /signin page
+        <Route {...rest} render={props => (
+            authenticated ?
+                <Component {...props} {...rest} />
+            : <Redirect to="/signin" />
+        )} />
     );
-  }
+  };
 
 
   return (
@@ -120,9 +118,9 @@ function App() {
 
           <Switch>
             <Route exact path= "/" component={Courses} />
-            <PrivateRoute  path= "/courses/create" component={CreateCourse} authToken={authToken} />
+            <PrivateRoute  path= "/courses/create"   component={CreateCourse} authToken={authToken}/>
             <PrivateRoute  path= "/courses/:id/update" component={UpdateCourse} authToken={authToken}  />
-            <Route  path= "/courses/:id" render={(routerProps)=> <CourseDetail {...routerProps} authenticated={authenticated} authenticatedUser={authenticatedUser}  />} />
+            <Route  path= "/courses/:id" render={(routerProps)=> <CourseDetail {...routerProps} authenticated={authenticated} authenticatedUser={authenticatedUser} authToken={authToken}  />} />
             <Route  path= "/signin" render={()=> <UserSignIn  signIn= {signIn} /> }/>
             <Route  path= "/signup" render={()=> <UserSignUp  signIn= {signIn}  /> }/>
             <Route  path= "/signout" render={()=> <UserSignOut signOut= {signOut} /> }/>

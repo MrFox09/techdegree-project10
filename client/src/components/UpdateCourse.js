@@ -12,6 +12,8 @@ function UpdateCourse ({match,...props}) {
     const [formInput, setFormInput] = useState({});
     const [errors, setErrors] = useState([]);
 
+    const {authToken} = props;
+
 
     let id = match.params.id;
    
@@ -36,14 +38,14 @@ function UpdateCourse ({match,...props}) {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json; charset=utf-8', 
-            'Authorization': `Basic ${props.authToken}`     
+            'Authorization': `Basic ${authToken}`     
           },
           body: JSON.stringify(formInput)
   
         }    
       );
   
-      if(response.status === 201) {
+      if(response.status === 204) {
       
         history.push(`/courses/${id}`);
   
